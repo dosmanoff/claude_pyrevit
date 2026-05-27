@@ -1,0 +1,85 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Claude — Settings"
+    Height="340" Width="480"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    Background="#FAFAFA">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Anthropic API key"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,4"/>
+        <PasswordBox x:Name="ApiKeyBox"
+                     Grid.Row="1"
+                     Padding="6"
+                     FontFamily="Consolas"
+                     FontSize="12"/>
+        <TextBlock x:Name="KeySourceText"
+                   Grid.Row="2"
+                   Margin="0,4,0,0"
+                   FontSize="11"
+                   Foreground="#888"/>
+
+        <TextBlock Grid.Row="3"
+                   Text="Model"
+                   FontWeight="SemiBold"
+                   Margin="0,16,0,4"/>
+        <ComboBox x:Name="ModelCombo"
+                  Grid.Row="4"
+                  Padding="6"
+                  FontFamily="Consolas">
+            <ComboBoxItem Content="claude-sonnet-4-6"/>
+            <ComboBoxItem Content="claude-opus-4-7"/>
+            <ComboBoxItem Content="claude-haiku-4-5-20251001"/>
+        </ComboBox>
+
+        <TextBlock x:Name="ConfigPathText"
+                   Grid.Row="5"
+                   Margin="0,16,0,0"
+                   FontSize="11"
+                   Foreground="#888"
+                   TextWrapping="Wrap"/>
+
+        <TextBlock x:Name="StatusText"
+                   Grid.Row="6"
+                   Margin="0,12,0,12"
+                   FontSize="12"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Bottom"/>
+
+        <StackPanel Grid.Row="7"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button x:Name="TestButton"
+                    Content="Test connection"
+                    Width="130"
+                    Height="28"
+                    Margin="0,0,8,0"/>
+            <Button x:Name="SaveButton"
+                    Content="Save"
+                    Width="80"
+                    Height="28"
+                    FontWeight="SemiBold"
+                    IsDefault="True"
+                    Margin="0,0,8,0"/>
+            <Button x:Name="CancelButton"
+                    Content="Cancel"
+                    Width="80"
+                    Height="28"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -60,9 +60,10 @@ class ChatWindow(forms.WPFWindow):
 
         if not config.get_api_key():
             self._append("Setup", (
-                "No ANTHROPIC_API_KEY found. Set the environment variable or "
-                "create lib/claude_revit/_local_config.py with "
-                "ANTHROPIC_API_KEY = '...' before sending."
+                "No API key set. Click the Settings button next to this one "
+                "and paste your Anthropic API key (sk-ant-...). The key is "
+                "stored at %APPDATA%\\claude_pyrevit\\config.json, not in "
+                "the repository."
             ), ERROR_BRUSH)
         else:
             self._append("Claude", (

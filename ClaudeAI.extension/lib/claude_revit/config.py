@@ -1,12 +1,17 @@
-"""API key, model selection, and other settings.
+"""Runtime config — API key and model selection.
 
-Resolution order for the API key:
-  1. _local_config.py  (gitignored, user-edited; preferred for desktop install)
-  2. ANTHROPIC_API_KEY environment variable
-  3. None — caller must show an error to the user.
+Resolution order (first hit wins):
+  1. user_config.json   — set via the in-Revit Settings dialog.
+                          Stored under %APPDATA%/claude_pyrevit/.
+  2. ANTHROPIC_API_KEY  — environment variable.
+  3. _local_config.py   — dev-only override, gitignored.
+
+For typical desktop installs (1) is what the user interacts with.
 """
 
 import os
+
+from . import user_config
 
 DEFAULT_MODEL = "claude-sonnet-4-6"
 DEFAULT_MAX_TOKENS = 8192
@@ -18,20 +23,38 @@ ANTHROPIC_BASE_URL = "https://api.anthropic.com"
 MAX_TOOL_ROUNDS = 20
 
 
-def get_api_key():
+def _from_local_config(attr):
     try:
         from . import _local_config  # type: ignore
-        key = getattr(_local_config, "ANTHROPIC_API_KEY", None)
-        if key:
-            return key
     except ImportError:
-        pass
-    return os.environ.get("ANTHROPIC_API_KEY")
+        return None
+    return getattr(_local_config, attr, None)
+
+
+def get_api_key():
+    key = user_config.api_key()
+    if key:
+        return key
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if key:
+        return key
+    return _from_local_config("ANTHROPIC_API_KEY")
 
 
 def get_model():
-    try:
-        from . import _local_config  # type: ignore
-        return getattr(_local_config, "MODEL", DEFAULT_MODEL)
-    except ImportError:
-        return DEFAULT_MODEL
+    return (
+        user_config.model()
+        or _from_local_config("MODEL")
+        or DEFAULT_MODEL
+    )
+
+
+def api_key_source():
+    """Where did the current API key come from? Used by the Settings UI."""
+    if user_config.api_key():
+        return "user_config"
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        return "env"
+    if _from_local_config("ANTHROPIC_API_KEY"):
+        return "local_config"
+    return None

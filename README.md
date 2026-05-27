@@ -39,14 +39,28 @@ All writes go through a preview dialog. All writes happen inside one
    `C:\pyRevit-Extensions\claude_pyrevit\`.
 3. In Revit: pyRevit tab → Settings → Custom Extension Directories →
    add the folder that *contains* `ClaudeAI.extension`. Reload.
-4. Set your API key (one of):
-   - Environment variable: `ANTHROPIC_API_KEY=sk-ant-...`
-   - File: create `ClaudeAI.extension/lib/claude_revit/_local_config.py`
-     with `ANTHROPIC_API_KEY = "sk-ant-..."`. This file is gitignored.
+4. In Revit: **Smart Tools → Claude → Settings**. Paste your Anthropic
+   API key (`sk-ant-...`), pick a model, hit *Test connection*, then *Save*.
+   The key is stored at `%APPDATA%\claude_pyrevit\config.json` — outside
+   this repository, so it never gets committed.
+
+The extension adds buttons to the existing **Smart Tools** tab if you
+already have one; otherwise pyRevit creates the tab. If your tab folder
+is named differently (e.g. `Smart_Tools.tab`), rename
+`ClaudeAI.extension/SmartTools.tab` to match.
+
+### Alternate ways to provide the API key
+
+For dev workflows you can skip the Settings dialog and use either:
+- Environment variable: `setx ANTHROPIC_API_KEY sk-ant-...`
+- File: create `ClaudeAI.extension/lib/claude_revit/_local_config.py`
+  with `ANTHROPIC_API_KEY = "sk-ant-..."`. Gitignored.
+
+The Settings dialog's value takes precedence over both.
 
 ## Use
 
-In Revit: **Claude AI** tab → **Assistant** panel → **Chat** button.
+In Revit: **Smart Tools** tab → **Claude** panel → **Chat** button.
 
 Type your request. Claude will ask follow-up questions if needed and
 will always show you a preview before changing anything.
