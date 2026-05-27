@@ -34,9 +34,21 @@ from claude_revit import config
 
 XAML_PATH = os.path.join(os.path.dirname(__file__), "ChatWindow.xaml")
 
-# __revit__ is injected by pyRevit into every script's globals.
-UIDOC = __revit__.ActiveUIDocument  # noqa: F821
-DOC = UIDOC.Document if UIDOC is not None else None
+
+def _current_doc_uidoc():
+    """Fetch fresh Document / UIDocument refs on every call.
+
+    DO NOT cache these at module level. Under CPython3 + Revit 2025,
+    pythonnet caches CLR wrappers in CLRWrapperCollection and during
+    pyRevit reload tries to enumerate them — calling GetHashCode on a
+    stale Document throws InvalidObjectException and aborts shutdown.
+    Fetching them lazily on the UI thread avoids the stale-handle
+    bookkeeping.
+    """
+    uidoc = __revit__.ActiveUIDocument  # noqa: F821
+    if uidoc is None:
+        return None, None
+    return uidoc.Document, uidoc
 
 USER_BRUSH = SolidColorBrush(WpfColor.FromRgb(33, 99, 169))
 ASSISTANT_BRUSH = SolidColorBrush(WpfColor.FromRgb(40, 40, 40))
@@ -161,8 +173,9 @@ class ChatWindow(WPFWindow):
 
             def on_ui():
                 try:
+                    doc, uidoc = _current_doc_uidoc()
                     holder["result"] = tools_impl.dispatch(
-                        tool_name, tool_input, DOC, UIDOC
+                        tool_name, tool_input, doc, uidoc
                     )
                 except Exception as e:
                     holder["error"] = "{}\n{}".format(e, traceback.format_exc())
