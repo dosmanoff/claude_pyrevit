@@ -20,6 +20,33 @@ class AnthropicError(Exception):
     pass
 
 
+def test_api_key(key):
+    """Cheap connectivity + auth check. Returns (ok: bool, message: str)."""
+    if not key:
+        return False, "No API key provided."
+    req = urllib.request.Request(
+        config.ANTHROPIC_BASE_URL + "/v1/models?limit=1",
+        method="GET",
+    )
+    req.add_header("x-api-key", key)
+    req.add_header("anthropic-version", config.ANTHROPIC_VERSION)
+    ctx = ssl.create_default_context()
+    try:
+        with urllib.request.urlopen(req, context=ctx, timeout=15) as resp:
+            json.loads(resp.read().decode("utf-8"))  # validate shape
+        return True, "OK — key accepted."
+    except urllib.error.HTTPError as e:
+        try:
+            body = e.read().decode("utf-8")
+        except Exception:
+            body = ""
+        if e.code == 401:
+            return False, "401 Unauthorized — key is invalid."
+        return False, "HTTP {}: {}".format(e.code, body[:200])
+    except urllib.error.URLError as e:
+        return False, "Network error: {}".format(e)
+
+
 def _post_messages(payload):
     """Single HTTP call to /v1/messages. Returns the parsed JSON body."""
     api_key = config.get_api_key()

@@ -1,0 +1,6 @@
+title: Settings
+tooltip: Set the Anthropic API key and choose a Claude model. Stored in %APPDATA%\claude_pyrevit\config.json, never in the repo.
+author: dosmanoff
+engine:
+  type: cpython
+  version: "3"
