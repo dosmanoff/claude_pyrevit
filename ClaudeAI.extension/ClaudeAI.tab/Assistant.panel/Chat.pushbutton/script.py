@@ -16,13 +16,13 @@ clr.AddReference("PresentationFramework")
 clr.AddReference("PresentationCore")
 clr.AddReference("WindowsBase")
 
-from System.Windows.Controls import TextBlock, Border
-from System.Windows.Documents import Run, LineBreak
-from System.Windows.Media import Brushes, SolidColorBrush
+from System.Windows.Controls import TextBlock
+from System.Windows.Documents import Run
+from System.Windows.Media import SolidColorBrush
 from System.Windows.Media import Color as WpfColor
 from System.Windows import Thickness, FontWeights, TextWrapping
 
-from pyrevit import forms, revit, script  # noqa: F401
+from claude_revit.wpf_window import WPFWindow
 
 from claude_revit.api_client import run_turn, AnthropicError
 from claude_revit.system_prompt import SYSTEM_PROMPT
@@ -33,8 +33,9 @@ from claude_revit import config
 
 XAML_PATH = os.path.join(os.path.dirname(__file__), "ChatWindow.xaml")
 
-DOC = revit.doc
-UIDOC = revit.uidoc
+# __revit__ is injected by pyRevit into every script's globals.
+UIDOC = __revit__.ActiveUIDocument  # noqa: F821
+DOC = UIDOC.Document if UIDOC is not None else None
 
 USER_BRUSH = SolidColorBrush(WpfColor.FromRgb(33, 99, 169))
 ASSISTANT_BRUSH = SolidColorBrush(WpfColor.FromRgb(40, 40, 40))
@@ -42,10 +43,10 @@ TOOL_BRUSH = SolidColorBrush(WpfColor.FromRgb(120, 120, 120))
 ERROR_BRUSH = SolidColorBrush(WpfColor.FromRgb(180, 50, 50))
 
 
-class ChatWindow(forms.WPFWindow):
+class ChatWindow(WPFWindow):
 
     def __init__(self, xaml_path):
-        forms.WPFWindow.__init__(self, xaml_path)
+        WPFWindow.__init__(self, xaml_path)
         self.messages = []
         self.usage = {
             "input_tokens": 0,
