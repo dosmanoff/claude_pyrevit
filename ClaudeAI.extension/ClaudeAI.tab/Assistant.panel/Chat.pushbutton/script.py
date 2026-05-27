@@ -16,6 +16,7 @@ clr.AddReference("PresentationFramework")
 clr.AddReference("PresentationCore")
 clr.AddReference("WindowsBase")
 
+from System import Action
 from System.Windows.Controls import TextBlock
 from System.Windows.Documents import Run
 from System.Windows.Media import SolidColorBrush
@@ -112,8 +113,13 @@ class ChatWindow(WPFWindow):
         self._update_tokens()
 
     def _ui(self, action):
-        """Marshal a no-arg callable onto the WPF dispatcher (UI thread)."""
-        self.Dispatcher.Invoke(action)
+        """Marshal a no-arg callable onto the WPF dispatcher (UI thread).
+
+        Wrap in System.Action explicitly — pythonnet's auto-delegate
+        conversion fails silently for Dispatcher.Invoke under CPython,
+        leaving the background thread dead and the UI hung.
+        """
+        self.Dispatcher.Invoke(Action(action))
 
     # ------------------------------------------------------------ handlers
 
@@ -161,7 +167,7 @@ class ChatWindow(WPFWindow):
                 except Exception as e:
                     holder["error"] = "{}\n{}".format(e, traceback.format_exc())
 
-            self.Dispatcher.Invoke(on_ui)
+            self.Dispatcher.Invoke(Action(on_ui))
             if holder["error"]:
                 raise RuntimeError(holder["error"])
             return holder["result"]

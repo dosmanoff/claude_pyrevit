@@ -17,6 +17,7 @@ clr.AddReference("PresentationFramework")
 clr.AddReference("PresentationCore")
 clr.AddReference("WindowsBase")
 
+from System import Action
 from System.Windows.Media import SolidColorBrush
 from System.Windows.Media import Color as WpfColor
 
@@ -125,7 +126,7 @@ class SettingsWindow(WPFWindow):
                 self._set_status(msg, OK_BRUSH if ok else ERR_BRUSH)
                 self.TestButton.IsEnabled = True
                 self.SaveButton.IsEnabled = True
-            self.Dispatcher.Invoke(finish)
+            self.Dispatcher.Invoke(Action(finish))
 
         threading.Thread(target=run, daemon=True).start()
 
