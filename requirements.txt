@@ -1,0 +1,9 @@
+# Runtime: none. The extension uses Python stdlib only (urllib + json).
+# pyRevit 5 ships its own CPython 3 — no pip install needed.
+#
+# If you want to use the official anthropic SDK instead of the stdlib client,
+# install it into pyRevit's CPython:
+#   pyrevit env  (to find the python path)
+#   <that-python> -m pip install anthropic
+#
+# Then set USE_OFFICIAL_SDK = True in claude_revit/api_client.py.

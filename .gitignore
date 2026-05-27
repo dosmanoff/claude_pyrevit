@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+
+# pyRevit cache
+*.dll.cache
+*.cache
+
+# Local config / secrets
+.env
+.api_key
+api_key.txt
+ClaudeAI.extension/lib/claude_revit/_local_config.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
