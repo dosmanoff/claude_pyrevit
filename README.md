@@ -39,15 +39,13 @@ All writes go through a preview dialog. All writes happen inside one
    `C:\pyRevit-Extensions\claude_pyrevit\`.
 3. In Revit: pyRevit tab → Settings → Custom Extension Directories →
    add the folder that *contains* `ClaudeAI.extension`. Reload.
-4. In Revit: **Smart Tools → Claude → Settings**. Paste your Anthropic
+4. In Revit: **Claude AI → Claude → Settings**. Paste your Anthropic
    API key (`sk-ant-...`), pick a model, hit *Test connection*, then *Save*.
    The key is stored at `%APPDATA%\claude_pyrevit\config.json` — outside
    this repository, so it never gets committed.
 
-The extension adds buttons to the existing **Smart Tools** tab if you
-already have one; otherwise pyRevit creates the tab. If your tab folder
-is named differently (e.g. `Smart_Tools.tab`), rename
-`ClaudeAI.extension/SmartTools.tab` to match.
+The extension creates its own **Claude AI** ribbon tab with a single
+*Claude* panel containing Chat and Settings buttons.
 
 ### Alternate ways to provide the API key
 
@@ -60,7 +58,7 @@ The Settings dialog's value takes precedence over both.
 
 ## Use
 
-In Revit: **Smart Tools** tab → **Claude** panel → **Chat** button.
+In Revit: **Claude AI** tab → **Claude** panel → **Chat** button.
 
 Type your request. Claude will ask follow-up questions if needed and
 will always show you a preview before changing anything.
