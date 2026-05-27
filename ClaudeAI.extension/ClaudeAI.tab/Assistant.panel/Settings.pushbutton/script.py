@@ -20,7 +20,7 @@ clr.AddReference("WindowsBase")
 from System.Windows.Media import SolidColorBrush
 from System.Windows.Media import Color as WpfColor
 
-from pyrevit import forms  # noqa: F401
+from claude_revit.wpf_window import WPFWindow
 
 from claude_revit import config, user_config
 from claude_revit.api_client import test_api_key
@@ -33,10 +33,10 @@ ERR_BRUSH = SolidColorBrush(WpfColor.FromRgb(180, 50, 50))
 INFO_BRUSH = SolidColorBrush(WpfColor.FromRgb(100, 100, 100))
 
 
-class SettingsWindow(forms.WPFWindow):
+class SettingsWindow(WPFWindow):
 
     def __init__(self, xaml_path):
-        forms.WPFWindow.__init__(self, xaml_path)
+        WPFWindow.__init__(self, xaml_path)
 
         # Pre-fill from existing config
         existing_key = user_config.api_key() or ""
