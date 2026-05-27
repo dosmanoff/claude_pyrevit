@@ -1,0 +1,6 @@
+title: Chat
+tooltip: Open the Claude chat window. Ask in plain language; Claude will preview every change before applying.
+author: dosmanoff
+engine:
+  type: cpython
+  version: "3"
